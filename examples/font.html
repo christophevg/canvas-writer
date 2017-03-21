@@ -24,6 +24,9 @@
   <input id="write" type="button" value="write" onclick="writeText();">
   <br>
   <canvas id="output" width="600" height="200"></canvas>
+  <br>
+  recorded data :<br>
+  <textarea id="recorded" rows="10" cols="82"></textarea>
   <script>
     var writer;
     var font = {};
@@ -39,7 +42,9 @@
       } else {
         writer.stop();
         button.value = "record";
-        font[document.getElementById("name").value] = writer.getRecorded();
+        recorded = writer.getRecorded();
+        document.getElementById("recorded").value = JSON.stringify(recorded);
+        font[document.getElementById("name").value] = recorded;
       }
     }
 
