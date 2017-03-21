@@ -16,10 +16,18 @@
     input.element = document.getElementById(source);
     input.canvas  = input.element.getContext("2d");
     // setup event handlers
-    input.element.onmousedown = penDown;
-    input.element.onmouseup   = penUp;
-    input.element.onmousemove = penMove;
+    observe(input.element, "mousedown", penDown);
+    observe(input.element, "mouseup",   penUp  );
+    observe(input.element, "mousemove", penMove);
     return this;
+  }
+
+  function observe(element, eventName, handler) {
+    if( element.addEventListener ) {
+      element.addEventListener(eventName, handler, false);
+    } else {
+      element.attachEvent("on" + eventName, handler);
+    }
   }
 
   var recorded = [];
