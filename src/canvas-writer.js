@@ -107,56 +107,86 @@
 
   var afterDrawing = null;
 
-  function stopRecording(whenDone) {
+  function stopRecording() {
     recording = false;
-    clear(output);
-    afterDrawing = whenDone;
-    draw();
     console.log(recorded);
-  }
-
-  var pixel = 0;
-
-  function draw() {
-    output.canvas.beginPath();
-    output.canvas.moveTo(recorded[0].x, recorded[0].y);
-    pixel = 0;
-    drawNext();
-  }
-  
-  function drawNext() {
-    if(pixel < recorded.length) {
-      if(recorded[pixel] == "U") {
-        pixel++;
-        if(pixel < recorded.length) {
-          output.canvas.beginPath();
-          output.canvas.moveTo(recorded[pixel].x, recorded[pixel].y);
-        }
-      } else {
-        output.canvas.lineTo(recorded[pixel].x, recorded[pixel].y);
-        output.canvas.stroke();
-      }
-      // schedule next
-      pixel++;
-      setTimeout(drawNext, speed);
-    } else {
-      if(afterDrawing) {
-        afterDrawing();
-        afterDrawing = null;
-      }
-    }
   }
 
   function setSpeed(newSpeed) {
     speed = newSpeed;
     return this;
   }
+  
+  function getRecorded() {
+    return recorded;
+  }
+
+  var writeData, writeText;
+  var drawChar, drawPixel;
+  var offset;
+
+  function write(data, text) {
+    clear(output);
+
+    writeData = data;
+    writeText = text;
+    drawChar  = 0;
+    drawPixel = 0;
+    offset    = 0;
+
+    draw();
+  }
+
+  var width = 0;
+
+  function draw() {
+    if(drawChar < writeText.length) { // characters left to draw ?
+      c = writeText[drawChar];
+      if( ! writeData[c] ) {
+        console.log("unknown char " + c);
+        return;
+      }
+      if(drawPixel < writeData[c].length) { // pixels left to draw ?
+        if(drawPixel == 0) {
+          // move to start
+          p = writeData[c][drawPixel];
+          output.canvas.beginPath();
+          output.canvas.moveTo(offset + p.x, p.y);
+          if(width < p.x) { width = p.x; }
+        } else if(writeData[c][drawPixel] == "U") {
+          // move to next
+          drawPixel++;
+          if(drawPixel < recorded.length) {
+            p = writeData[c][drawPixel];
+            output.canvas.beginPath();
+            output.canvas.moveTo(offset + p.x, p.y);
+            if(width < p.x) { width = p.x; }
+          }          
+        } else {
+          // stroke to next
+          p = writeData[c][drawPixel];
+          output.canvas.lineTo(offset + p.x, p.y);
+          output.canvas.stroke();          
+          if(width < p.x) { width = p.x; }
+        }
+        drawPixel++;
+      } else {
+        // prepare for next character
+        offset = width + 10;
+        width = 0;
+        drawChar++;
+      }
+      setTimeout(draw, speed);
+    }
+  }
 
   globals.CanvasWriter = {
-    "useInput"  : useInput,
-    "useOutput" : useOutput,
-    "setSpeed"  : setSpeed,
-    "record"    : startRecording,
-    "stop"      : stopRecording
+    "useInput"    : useInput,
+    "useOutput"   : useOutput,
+    "setSpeed"    : setSpeed,
+    "record"      : startRecording,
+    "stop"        : stopRecording,
+    "getRecorded" : getRecorded,
+    "write"       : write
   }
 })(window);

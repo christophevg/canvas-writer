@@ -20,27 +20,27 @@
   <br>
   <input  id="action" type="button" value="record" onclick="toggle(this);">
   <script>
+
     var writer;
+
     window.onload = function() { 
       writer = CanvasWriter.useInput("input")
                            .useOutput("output")
                            .setSpeed(25);
     }
+
     function toggle(button) {
       if(button.value == "record") {
         button.value = "stop";
-        record();
+        writer.record();
       } else {
-        stopRecording(function() { button.value = "record"; });
+        writer.stop();
+        button.value = "record";
+        var drawing = { "drawing" : writer.getRecorded() };
+        writer.write(drawing, [ "drawing" ]);
       }
     }
-    function record() {
-      writer.record();
-    }
-    
-    function stopRecording(whenDone) {
-      writer.stop(whenDone);
-    }
+
   </script>
 </body>
 </html>
