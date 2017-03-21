@@ -2,6 +2,11 @@
 // and playback hand-written text.
 // author: Christophe VG <contact@christophe.vg>
 
+// The drawing format consists of pairs of coordinates to move to. Coordinate
+// "U" means pen up, resulting in a move to the next coordinate where the
+// pen is put down again.
+
+
 (function(globals) {
   
   var input = {}, output = {};
@@ -11,43 +16,45 @@
     input.element = document.getElementById(source);
     input.canvas  = input.element.getContext("2d");
     // setup event handlers
-    document.onmousedown = startRecording;
-    document.onmouseup   = stopRecording;
-    document.onmousemove = record;
+    document.onmousedown = penDown;
+    document.onmouseup   = penUp;
+    document.onmousemove = penMove;
     return this;
   }
 
   var recorded = [];
   var recording = false;
 
-  function startRecording(event) {
-    recorded = [];
-    recording = true;
-    clear(input);
-    input.canvas.beginPath();
+  var writing = false;
+
+  function penDown(event) {
+    writing = true;
+    if(recording) {
+      var point = getXY(event);
+      recorded.push(point);
+      input.canvas.beginPath();
+      input.canvas.moveTo(point.x, point.y);
+    }
+  }
+  
+  function penUp(event) {
+    writing = false;
+    if(recording) {
+      recorded.push("U");
+    }
   }
 
-  function record(event) {
+  function penMove(event) {
     if(! recording ) { return; }
-    var point = getXY(event);
-    recorded.push(point);
     // draw for feedback
-    if(recorded.length == 1) {
-      input.canvas.moveTo(point.x, point.y);
-    } else {
+    if(writing) {
+      var point = getXY(event);
+      recorded.push(point);
       input.canvas.lineTo(point.x, point.y);
       input.canvas.stroke();
     }
   }
   
-  function stopRecording(event) {
-    recording = false;
-    // clear output
-    clear(output);
-    // draw recorded on output
-    draw();
-  }
-
   function getXY(e) {
     var x,y;
     // IE?
@@ -91,8 +98,21 @@
     item.canvas.clearRect(0, 0, item.element.width, item.element.height);
   }
 
-  function setSpeed(newSpeed) {
-    speed = newSpeed;
+  function startRecording() {
+    clear(input);
+    recorded  = [];
+    recording = true;
+    penDown   = false;
+  }
+
+  var afterDrawing = null;
+
+  function stopRecording(whenDone) {
+    recording = false;
+    clear(output);
+    afterDrawing = whenDone;
+    draw();
+    console.log(recorded);
   }
 
   var pixel = 0;
@@ -106,17 +126,37 @@
   
   function drawNext() {
     if(pixel < recorded.length) {
-      output.canvas.lineTo(recorded[pixel].x, recorded[pixel].y);
-      output.canvas.stroke();
+      if(recorded[pixel] == "U") {
+        pixel++;
+        if(pixel < recorded.length) {
+          output.canvas.beginPath();
+          output.canvas.moveTo(recorded[pixel].x, recorded[pixel].y);
+        }
+      } else {
+        output.canvas.lineTo(recorded[pixel].x, recorded[pixel].y);
+        output.canvas.stroke();
+      }
       // schedule next
       pixel++;
       setTimeout(drawNext, speed);
+    } else {
+      if(afterDrawing) {
+        afterDrawing();
+        afterDrawing = null;
+      }
     }
+  }
+
+  function setSpeed(newSpeed) {
+    speed = newSpeed;
+    return this;
   }
 
   globals.CanvasWriter = {
     "useInput"  : useInput,
     "useOutput" : useOutput,
-    "setSpeed"  : setSpeed
+    "setSpeed"  : setSpeed,
+    "record"    : startRecording,
+    "stop"      : stopRecording
   }
 })(window);

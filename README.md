@@ -8,6 +8,6 @@ Using CanvasWriter you can record and replay things you draw on an HTML5 Canvas 
 
 # Record & Play
 
-In its most basic form, that's what it does. Open `examples/record-play.html` in a browser (only Safari is tested right now) and draw something inside the left rectangle on the screen. CanvasWriter will record it and display it when you release your mouse or finger.
+In its most basic form, that's what it does. Open `examples/record-play.html` in a browser (only Safari is tested right now), push the `record` button and draw something inside the left rectangle on the screen. When done, push the `stop` button and watch CanvasWriter _write_. In the Javascript console, the recorded data is logged.
 
 ![Record & Play](assets/record-play.png)

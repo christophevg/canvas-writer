@@ -17,11 +17,29 @@
 <body>
   <canvas id="input" width="150" height="200"></canvas>
   <canvas id="output" width="150" height="200"></canvas>
+  <br>
+  <input  id="action" type="button" value="record" onclick="toggle(this);">
   <script>
+    var writer;
     window.onload = function() { 
-      CanvasWriter.useInput("input")
-                  .useOutput("output")
-                  .setSpeed(25);
+      writer = CanvasWriter.useInput("input")
+                           .useOutput("output")
+                           .setSpeed(25);
+    }
+    function toggle(button) {
+      if(button.value == "record") {
+        button.value = "stop";
+        record();
+      } else {
+        stopRecording(function() { button.value = "record"; });
+      }
+    }
+    function record() {
+      writer.record();
+    }
+    
+    function stopRecording(whenDone) {
+      writer.stop(whenDone);
     }
   </script>
 </body>
