@@ -16,9 +16,9 @@
     input.element = document.getElementById(source);
     input.canvas  = input.element.getContext("2d");
     // setup event handlers
-    document.onmousedown = penDown;
-    document.onmouseup   = penUp;
-    document.onmousemove = penMove;
+    input.element.onmousedown = penDown;
+    input.element.onmouseup   = penUp;
+    input.element.onmousemove = penMove;
     return this;
   }
 
