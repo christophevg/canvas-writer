@@ -134,50 +134,58 @@
     drawPixel = 0;
     offset    = 0;
 
-    draw();
+    drawNextChar();
   }
 
   var width = 0;
 
-  function draw() {
+  function drawNextChar() {
     if(drawChar < writeText.length) { // characters left to draw ?
       c = writeText[drawChar];
       if( ! writeData[c] ) {
         console.log("unknown char " + c);
         return;
       }
-      if(drawPixel < writeData[c].length) { // pixels left to draw ?
-        if(drawPixel == 0) {
-          // move to start
+      console.log("writing char " + c + " at offset " + offset);
+      setTimeout(drawNextPixel, 0);
+    }
+  }
+
+  function drawNextPixel() {
+    c = writeText[drawChar];
+    if(drawPixel < writeData[c].length) { // pixels left to draw ?
+      if(drawPixel == 0) {
+        // move to start
+        p = writeData[c][drawPixel];
+        output.canvas.beginPath();
+        output.canvas.moveTo(offset + p.x, p.y);
+        if(width < p.x) { width = p.x; }
+      } else if(writeData[c][drawPixel] == "U") {
+        // move to next
+        drawPixel++;
+        if(drawPixel < writeData[c].length) {
           p = writeData[c][drawPixel];
           output.canvas.beginPath();
           output.canvas.moveTo(offset + p.x, p.y);
           if(width < p.x) { width = p.x; }
-        } else if(writeData[c][drawPixel] == "U") {
-          // move to next
-          drawPixel++;
-          if(drawPixel < recorded.length) {
-            p = writeData[c][drawPixel];
-            output.canvas.beginPath();
-            output.canvas.moveTo(offset + p.x, p.y);
-            if(width < p.x) { width = p.x; }
-          }          
-        } else {
-          // stroke to next
-          p = writeData[c][drawPixel];
-          output.canvas.lineTo(offset + p.x, p.y);
-          output.canvas.stroke();          
-          if(width < p.x) { width = p.x; }
-        }
-        drawPixel++;
+        }          
       } else {
-        // prepare for next character
-        offset = width + 10;
-        width = 0;
-        drawChar++;
+        // stroke to next
+        p = writeData[c][drawPixel];
+        output.canvas.lineTo(offset + p.x, p.y);
+        output.canvas.stroke();          
+        if(width < p.x) { width = p.x; }
       }
-      setTimeout(draw, speed);
+      drawPixel++;
+      setTimeout(drawNextPixel, speed);
+      return;
     }
+    // prepare for next character
+    offset += width + 10;
+    width = 0;
+    drawChar++;
+    drawPixel = 0;
+    setTimeout(drawNextChar, 0);
   }
 
   globals.CanvasWriter = {
