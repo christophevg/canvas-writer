@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Canvas Writer Demo</title>
+  <meta name="viewport" 
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <script src="../src/canvas-writer.js"></script>
+  <style>
+  CANVAS {
+    border: 1px solid black;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas id="input" width="150" height="200"></canvas>
+  <canvas id="output" width="150" height="200"></canvas>
+  <script>
+    window.onload = function() { 
+      CanvasWriter.useInput("input")
+                  .useOutput("output")
+                  .setSpeed(25);
+    }
+  </script>
+</body>
+</html>
