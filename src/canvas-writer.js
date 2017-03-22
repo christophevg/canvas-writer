@@ -176,27 +176,40 @@
     }
   }
 
+  var selection = 0;
+
   function drawNextPixel() {
     c = writeText[drawChar];
-    if(drawPixel < writeData[c].length) { // pixels left to draw ?
+    pixels = writeData[c];
+
+    if( Object.prototype.toString.call( pixels[0] ) === '[object Array]' ) {
+      if(drawPixel == 0) {
+        // we have multiple character descriptors, choose one randomly
+        selection = Math.floor(Math.random() * pixels.length);
+        console.log("selecting randomly", selection, "from", pixels.length);
+      }
+      pixels = pixels[selection];
+    }
+
+    if(drawPixel < pixels.length) { // pixels left to draw ?
       if(drawPixel == 0) {
         // move to start
-        p = writeData[c][drawPixel];
+        p = pixels[drawPixel];
         output.canvas.beginPath();
         output.canvas.moveTo(offset + p.x, p.y);
         if(width < p.x) { width = p.x; }
-      } else if(writeData[c][drawPixel] == "U") {
+      } else if(pixels[drawPixel] == "U") {
         // move to next
         drawPixel++;
-        if(drawPixel < writeData[c].length) {
-          p = writeData[c][drawPixel];
+        if(drawPixel < pixels.length) {
+          p = pixels[drawPixel];
           output.canvas.beginPath();
           output.canvas.moveTo(offset + p.x, p.y);
           if(width < p.x) { width = p.x; }
         }          
       } else {
         // stroke to next
-        p = writeData[c][drawPixel];
+        p = pixels[drawPixel];
         output.canvas.lineTo(offset + p.x, p.y);
         output.canvas.lineWidth = lineWidth;
         output.canvas.stroke();          
