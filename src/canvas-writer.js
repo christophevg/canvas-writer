@@ -105,8 +105,9 @@
   var scaleFactor = 1;
 
   function clear(item) {
-    item.canvas.clearRect(0, 0, item.element.width / scaleFactor,
-                                item.element.height / scaleFactor);
+    output.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    item.canvas.clearRect(0, 0, item.element.width, item.element.height);
+    output.canvas.scale(scaleFactor, scaleFactor);
   }
 
   function startRecording() {
@@ -237,8 +238,6 @@
   }
   
   function withScale(scale) {
-    output.canvas.setTransform(1, 0, 0, 1, 0, 0);
-    output.canvas.scale(scale, scale);
     scaleFactor = scale;
     return this;
   }
