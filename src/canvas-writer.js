@@ -153,6 +153,11 @@
   function drawNextChar() {
     if(drawChar < writeText.length) { // characters left to draw ?
       c = writeText[drawChar];
+      if( c == " " ) {
+        offset += 25;
+        drawChar++;
+        c = writeText[drawChar];
+      }
       if( ! writeData[c] ) {
         console.log("unknown char " + c);
         return;
