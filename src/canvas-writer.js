@@ -168,7 +168,7 @@
         console.log("unknown char " + c);
         return;
       }
-      console.log("writing char " + c + " at offset " + offset);
+      // console.log("writing char " + c + " at offset " + offset);
       setTimeout(drawNextPixel, 0);
     } else {
       // we're done
@@ -186,7 +186,6 @@
       if(drawPixel == 0) {
         // we have multiple character descriptors, choose one randomly
         selection = Math.floor(Math.random() * pixels.length);
-        console.log("selecting randomly", selection, "from", pixels.length);
       }
       pixels = pixels[selection];
     }
