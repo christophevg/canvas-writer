@@ -133,14 +133,17 @@
   var drawChar, drawPixel;
   var offset;
 
-  function write(data, text) {
+  var afterWrite;
+
+  function write(data, text, whenDone) {
     clear(output);
 
-    writeData = data;
-    writeText = text;
-    drawChar  = 0;
-    drawPixel = 0;
-    offset    = 0;
+    writeData  = data;
+    writeText  = text;
+    afterWrite = whenDone;
+    drawChar   = 0;
+    drawPixel  = 0;
+    offset     = 0;
 
     drawNextChar();
   }
@@ -156,6 +159,9 @@
       }
       console.log("writing char " + c + " at offset " + offset);
       setTimeout(drawNextPixel, 0);
+    } else {
+      // we're done
+      if(afterWrite) { afterWrite(); }
     }
   }
 
