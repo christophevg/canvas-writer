@@ -63,7 +63,7 @@ function processUpdates() {
 }
 
 window.addEventListener("load", function() {
-  writer = CanvasWriter.withLine(5)
+  writer = CanvasWriter.withLine(15)
                        .withScale(0.5)
                        .withSpace(30)
                        .setSpeed(10);
