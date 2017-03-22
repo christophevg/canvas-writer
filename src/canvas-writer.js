@@ -108,6 +108,9 @@
     output.canvas.setTransform(1, 0, 0, 1, 0, 0);
     item.canvas.clearRect(0, 0, item.element.width, item.element.height);
     output.canvas.scale(scaleFactor, scaleFactor);
+    output.canvas.lineCap="round";
+    output.canvas.lineJoin="round";
+    output.canvas.translate(0.5, 0.5);
   }
 
   function startRecording() {
