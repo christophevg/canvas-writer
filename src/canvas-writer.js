@@ -102,8 +102,11 @@
     return this;
   }
 
+  var scaleFactor = 1;
+
   function clear(item) {
-    item.canvas.clearRect(0, 0, item.element.width, item.element.height);
+    item.canvas.clearRect(0, 0, item.element.width / scaleFactor,
+                                item.element.height / scaleFactor);
   }
 
   function startRecording() {
@@ -135,6 +138,9 @@
 
   var afterWrite;
 
+  var spaceWidth  = 25;
+  var lineWidth   = 1;
+
   function write(data, text, whenDone) {
     clear(output);
 
@@ -154,7 +160,7 @@
     if(drawChar < writeText.length) { // characters left to draw ?
       c = writeText[drawChar];
       if( c == " " ) {
-        offset += 25;
+        offset += spaceWidth;
         drawChar++;
         c = writeText[drawChar];
       }
@@ -192,6 +198,7 @@
         // stroke to next
         p = writeData[c][drawPixel];
         output.canvas.lineTo(offset + p.x, p.y);
+        output.canvas.lineWidth = lineWidth;
         output.canvas.stroke();          
         if(width < p.x) { width = p.x; }
       }
@@ -207,6 +214,23 @@
     setTimeout(drawNextChar, 0);
   }
 
+  function withSpace(width) {
+    spaceWidth = width;
+    return this;
+  }
+
+  function withLine(width) {
+    lineWidth = width;
+    return this;
+  }
+  
+  function withScale(scale) {
+    output.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    output.canvas.scale(scale, scale);
+    scaleFactor = scale;
+    return this;
+  }
+
   globals.CanvasWriter = {
     "useInput"    : useInput,
     "useOutput"   : useOutput,
@@ -214,6 +238,9 @@
     "record"      : startRecording,
     "stop"        : stopRecording,
     "getRecorded" : getRecorded,
-    "write"       : write
+    "write"       : write,
+    "withSpace"   : withSpace,
+    "withLine"    : withLine,
+    "withScale"   : withScale
   }
 })(window);
