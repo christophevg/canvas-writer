@@ -9,13 +9,47 @@
   <style>
   BODY {
     background-color: rgb(0,153,173);
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #332F2D;
+  }
+  .countdown {
+    display: flex;
+    justify-content: space-between;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .countdown p {
+    margin: 0;
+    font-size: 26px;
+    color: white;
   }
   </style>
 </head>
 
 <body>
-  <center>
-    <canvas id="countdown" width="600" height="200" data-totime="2018-08-18T00:00:00.000+02:00"></canvas>
+    <div id="countdown" class="countdown" data-totime="2018-08-18T00:00:00.000+02:00">
+        <div class="days">
+          <p class="label">Dagen</p>
+          <canvas id="countdown-days" width="200" height="100"></canvas>
+        </div>
+        <div class="hours">
+          <p class="label">Uren</p>
+          <canvas id="countdown-hours" width="150" height="100"></canvas>
+        </div>
+        <div class="minutes">
+          <p class="label">Minuten</p>
+          <canvas id="countdown-minutes" width="150" height="100"></canvas>
+        </div>
+        <div class="seconds">
+          <p class="label">Seconden</p>
+          <canvas id="countdown-seconds" width="150" height="100"></canvas>
+        </div>
+    </div>
+    
   </center>
   <script src="../src/canvas-writer.js"></script>
   <script src="digits.js"></script>

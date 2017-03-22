@@ -1,5 +1,8 @@
 var writer;
-var lastUpdate;
+
+var lastUpdate = { "days" : "", "hours" : "", "minutes" : "", "seconds" : "" };
+
+var updates = [];
 
 function updateClock() {
   var then = new Date(document.getElementById("countdown").dataset.totime);
@@ -13,23 +16,56 @@ function updateClock() {
     var minutes = Math.floor( (timediff-86400000*days-3600000*hours)/60000 );
     var seconds = Math.floor( (timediff-86400000*days-3600000*hours-60000*minutes)/1000 );
     
-    var update = ("000"+days).slice(-3) + " " +
-                 ("00"+hours).slice(-2) + " " +
-                 ("00"+minutes).slice(-2) + " " +
-                 ("00"+seconds).slice(-2);
+    updates = [];
+    
+    var daysUpdate = ("000"+days).slice(-3);
+    if(lastUpdate["days"] != daysUpdate) {
+      updates.push(function() {
+        writer.useOutput("countdown-days").write(font, daysUpdate, processUpdates);
+        lastUpdate["days"] = daysUpdate;
+      })
+    }
 
-    writer.write(font, update.split(""), function() {
-      setTimeout(updateClock, 10000);          
-    });
+    var hoursUpdate = ("00"+hours).slice(-2);
+    if(lastUpdate["hours"] != hoursUpdate) {
+      updates.push(function() {
+        writer.useOutput("countdown-hours").write(font, hoursUpdate, processUpdates);
+        lastUpdate["hours"] = hoursUpdate;
+      })
+    }
+
+    var minutesUpdate = ("00"+minutes).slice(-2);
+    if(lastUpdate["minutes"] != minutesUpdate) {
+      updates.push(function() {
+        writer.useOutput("countdown-minutes").write(font, minutesUpdate, processUpdates);
+        lastUpdate["minutes"] = minutesUpdate;
+      })
+    }
+
+    var secondsUpdate = ("00"+seconds).slice(-2);
+    if(lastUpdate["seconds"] != secondsUpdate) {
+      updates.push(function() {
+        writer.useOutput("countdown-seconds").write(font, secondsUpdate, processUpdates);
+        lastUpdate["seconds"] = secondsUpdate;
+      })
+    }
+    
+    processUpdates();
+  }
+}
+
+function processUpdates() {
+  if(updates.length > 0) {
+    updates.shift()();
+  } else {
+    setTimeout(updateClock, 1000);
   }
 }
 
 window.addEventListener("load", function() {
-  console.log("countdown starting...");
-  writer = CanvasWriter.useOutput("countdown")
-                       .withLine(5)
+  writer = CanvasWriter.withLine(5)
                        .withScale(0.5)
                        .withSpace(30)
-                       .setSpeed(15);
+                       .setSpeed(10);
  updateClock();
 }, false);
