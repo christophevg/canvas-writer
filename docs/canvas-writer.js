@@ -141,7 +141,6 @@
     clear(input);
     recorded  = [];
     recording = true;
-    penDown   = false;
   }
 
   var afterDrawing = null;
