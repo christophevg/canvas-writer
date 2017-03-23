@@ -19,6 +19,11 @@
     observe(input.element, "mousedown", penDown);
     observe(input.element, "mouseup",   penUp  );
     observe(input.element, "mousemove", penMove);
+    // support for "touch" devices
+    observe(input.element, "touchstart", handleTouchStart);
+    observe(input.element, "touchend",   handleTouchEnd  );
+    observe(input.element, "touchmove",  handleTouchMove );
+    
     return this;
   }
 
@@ -61,6 +66,25 @@
       input.canvas.lineTo(point.x, point.y);
       input.canvas.stroke();
     }
+  }
+
+  function handleTouchStart(event) {
+    if( event.touches.length == 1 ) {
+      penDown(event.touches[0]);
+      event.preventDefault();
+    }   
+  }
+
+  function handleTouchMove(event) {
+    if( event.touches.length == 1 ) {
+      penMove(event.touches[0]);
+      event.preventDefault();
+    }   
+  }
+
+  function handleTouchEnd(event) {
+    penUp(event);
+    event.preventDefault();
   }
   
   function getXY(e) {
