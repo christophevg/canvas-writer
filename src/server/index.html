@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Canvas Writer Demo</title>
+  <meta name="viewport" 
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <style>
+  CANVAS {
+    border: 1px solid black;
+  }
+  </style>
+</head>
+
+<body>
+  
+  <p>
+    Press the <tt>record</tt> button and draw something on the left canvas.
+    Then press the <tt>stop</tt> button and see CanvasWriter replay your drawing on the right canvas.
+  </p>
+  
+  <canvas id="input" width="150" height="200"></canvas>
+  <canvas id="output" width="150" height="200"></canvas>
+  <br>
+  <input  id="action" type="button" value="record" onclick="toggle(this);">
+
+  <script src="canvas-writer.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+  <script>
+
+    var socket;
+    var writer;
+
+    window.onload = function() { 
+      socket = io();
+      writer = CanvasWriter.useInput("input")
+                           .useOutput("output")
+                           .setSpeed(25);
+
+      socket.on('message', function(msg){
+        writer.write( { "msg" : msg }, [ "msg" ]);
+      });
+    }
+
+    function toggle(button) {
+      if(button.value == "record") {
+        button.value = "stop";
+        writer.record();
+      } else {
+        writer.stop();
+        button.value = "record";
+        socket.emit('message', writer.getRecorded());
+      }
+    }
+
+  </script>
+</body>
+</html>
