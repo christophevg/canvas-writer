@@ -6,7 +6,7 @@ author: Christophe VG <contact@christophe.vg>
 
 Using CanvasWriter you can record and replay things you draw on an HTML5 Canvas element. It's completely self-contained and doesn't use any external libraries.
 
-> All examples are published as working demos at [https://christophevg.github.io/canvas-writer](https://christophevg.github.io/canvas-writer)
+> The docs/ folder is published  [https://christophevg.github.io/canvas-writer](https://christophevg.github.io/canvas-writer)
 
 ## Record & Play
 

@@ -6,7 +6,7 @@
   <title>Canvas Writer Demo</title>
   <meta name="viewport" 
         content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-  <script src="../src/canvas-writer.js"></script>
+  <script src="canvas-writer.js"></script>
   <style>
   CANVAS {
     border: 1px solid black;
@@ -15,26 +15,26 @@
 </head>
 
 <body>
+  
+  <p>
+    Press the <tt>record</tt> button and draw something on the left canvas.
+    Then press the <tt>stop</tt> button and see CanvasWriter replay your drawing on the right canvas.
+  </p>
+  
   <canvas id="input" width="150" height="200"></canvas>
+  <canvas id="output" width="150" height="200"></canvas>
   <br>
-  name : <input  id="name" type="text" value="drawing">
-  <input id="action" type="button" value="record" onclick="toggle(this);">
-  <hr>
-  text : <input id="text" type="text" value="drawing drawing">
-  <input id="write" type="button" value="write" onclick="writeText();">
-  <br>
-  <canvas id="output" width="600" height="200"></canvas>
-  <br>
-  recorded data :<br>
-  <textarea id="recorded" rows="10" cols="82"></textarea>
+  <input  id="action" type="button" value="record" onclick="toggle(this);">
   <script>
+
     var writer;
-    var font = {};
+
     window.onload = function() { 
       writer = CanvasWriter.useInput("input")
                            .useOutput("output")
                            .setSpeed(25);
     }
+
     function toggle(button) {
       if(button.value == "record") {
         button.value = "stop";
@@ -42,15 +42,11 @@
       } else {
         writer.stop();
         button.value = "record";
-        recorded = writer.getRecorded();
-        document.getElementById("recorded").value = JSON.stringify(recorded);
-        font[document.getElementById("name").value] = recorded;
+        var drawing = { "drawing" : writer.getRecorded() };
+        writer.write(drawing, [ "drawing" ]);
       }
     }
 
-    function writeText() {
-      writer.write(font, document.getElementById("text").value.split(" "));
-    }
   </script>
 </body>
 </html>
