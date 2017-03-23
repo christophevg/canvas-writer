@@ -24,4 +24,4 @@ The second example shows how to record multiple drawings/characters and write a 
 
 **Experimental**
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template="https://github.com/christophevg/canvas-writer/tree/master/src/server)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/christophevg/canvas-writer/tree/master/src/server)
