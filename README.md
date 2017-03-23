@@ -19,9 +19,3 @@ In its most basic form, that's what it does. Open `examples/record-play.html` in
 The second example shows how to record multiple drawings/characters and write a series of them as consecutive characters. Open `examples/font.html` in a browser and record multiple drawings, changing the name. Then write a _text_ separating the different names of the characters with a space and press `write`:
 
 ![Font](assets/font.png)
-
-## Server
-
-**Experimental**
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/christophevg/canvas-writer/tree/master/src/server)
