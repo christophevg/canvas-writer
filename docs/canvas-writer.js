@@ -191,11 +191,6 @@
         drawChar++;
         c = writeText[drawChar];
       }
-      if( ! writeData[c] ) {
-        console.log("unknown char " + c);
-        return;
-      }
-      // console.log("writing char " + c + " at offset " + offset);
       setTimeout(drawNextPixel, 0);
     } else {
       // we're done
@@ -206,16 +201,30 @@
   var selection = 0;
 
   function drawNextPixel() {
-    c = writeText[drawChar];
-    pixels = writeData[c];
-    if( ! pixels ) { return; }
-    if( Object.prototype.toString.call( pixels[0] ) === '[object Array]' ) {
+    var c = writeText[drawChar];
+    var pixels;
+    if( Object.prototype.toString.call(writeData) == "[object Array]") {
       if(drawPixel == 0) {
         // we have multiple character descriptors, choose one randomly
-        selection = Math.floor(Math.random() * pixels.length);
+        selection = Math.floor(Math.random() * writeData.length);
       }
-      pixels = pixels[selection];
+      pixels = writeData[selection];
+    } else {
+      // no alternatives
+      pixels = writeData;
     }
+    if( ! pixels ) {
+      console.log("no pixels?");
+      return;
+    }
+
+    if( ! pixels[c] ) {
+      console.log("unknown char " + c);
+      return;
+    }
+    // console.log("writing char " + c + " at offset " + offset);
+
+    pixels = pixels[c];
 
     if(drawPixel < pixels.length) { // pixels left to draw ?
       if(drawPixel == 0) {
