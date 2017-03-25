@@ -142,12 +142,12 @@
     recorded  = [];
     recording = true;
   }
-
+  
   var afterDrawing = null;
 
   function stopRecording() {
     recording = false;
-    console.log(recorded);
+    // console.log(recorded);
   }
 
   function setSpeed(newSpeed) {
