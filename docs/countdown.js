@@ -63,9 +63,9 @@ function processUpdates() {
 }
 
 window.addEventListener("load", function() {
-  writer = CanvasWriter.withLine(15)
+  writer = CanvasWriter.withLine(5)
                        .withScale(0.5)
                        .withSpace(30)
-                       .setSpeed(10);
+                       .setSpeed(5);
  updateClock();
 }, false);
