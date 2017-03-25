@@ -129,12 +129,12 @@
   var scaleFactor = 1;
 
   function clear(item) {
-    output.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    item.canvas.setTransform(1, 0, 0, 1, 0, 0);
     item.canvas.clearRect(0, 0, item.element.width, item.element.height);
-    output.canvas.scale(scaleFactor, scaleFactor);
-    output.canvas.lineCap="round";
-    output.canvas.lineJoin="round";
-    output.canvas.translate(0.5, 0.5);
+    item.canvas.scale(scaleFactor, scaleFactor);
+    item.canvas.lineCap="round";
+    item.canvas.lineJoin="round";
+    item.canvas.translate(0.5, 0.5);
   }
 
   function startRecording() {
