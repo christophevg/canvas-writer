@@ -129,12 +129,12 @@
   var scaleFactor = 1;
 
   function clear(item) {
-    output.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    item.canvas.setTransform(1, 0, 0, 1, 0, 0);
     item.canvas.clearRect(0, 0, item.element.width, item.element.height);
-    output.canvas.scale(scaleFactor, scaleFactor);
-    output.canvas.lineCap="round";
-    output.canvas.lineJoin="round";
-    output.canvas.translate(0.5, 0.5);
+    item.canvas.scale(scaleFactor, scaleFactor);
+    item.canvas.lineCap="round";
+    item.canvas.lineJoin="round";
+    item.canvas.translate(0.5, 0.5);
   }
 
   function startRecording() {
@@ -142,12 +142,12 @@
     recorded  = [];
     recording = true;
   }
-
+  
   var afterDrawing = null;
 
   function stopRecording() {
     recording = false;
-    console.log(recorded);
+    // console.log(recorded);
   }
 
   function setSpeed(newSpeed) {
@@ -208,7 +208,7 @@
   function drawNextPixel() {
     c = writeText[drawChar];
     pixels = writeData[c];
-
+    if( ! pixels ) { return; }
     if( Object.prototype.toString.call( pixels[0] ) === '[object Array]' ) {
       if(drawPixel == 0) {
         // we have multiple character descriptors, choose one randomly
@@ -268,6 +268,15 @@
     return this;
   }
 
+  function load(data) {
+    recorded = data;
+    write({"char" : data}, ["char"]);
+  }
+  
+  function cancel() {
+    if(writeText) { drawChar = writeText.length; }
+  }
+
   globals.CanvasWriter = {
     "useInput"    : useInput,
     "useOutput"   : useOutput,
@@ -278,6 +287,8 @@
     "write"       : write,
     "withSpace"   : withSpace,
     "withLine"    : withLine,
-    "withScale"   : withScale
+    "withScale"   : withScale,
+    "load"        : load,
+    "cancel"      : cancel
   }
 })(window);
