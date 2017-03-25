@@ -208,7 +208,7 @@
   function drawNextPixel() {
     c = writeText[drawChar];
     pixels = writeData[c];
-
+    if( ! pixels ) { return; }
     if( Object.prototype.toString.call( pixels[0] ) === '[object Array]' ) {
       if(drawPixel == 0) {
         // we have multiple character descriptors, choose one randomly
