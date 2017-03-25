@@ -268,6 +268,15 @@
     return this;
   }
 
+  function load(data) {
+    recorded = data;
+    write({"char" : data}, ["char"]);
+  }
+  
+  function cancel() {
+    if(writeText) { drawChar = writeText.length; }
+  }
+
   globals.CanvasWriter = {
     "useInput"    : useInput,
     "useOutput"   : useOutput,
@@ -278,6 +287,8 @@
     "write"       : write,
     "withSpace"   : withSpace,
     "withLine"    : withLine,
-    "withScale"   : withScale
+    "withScale"   : withScale,
+    "load"        : load,
+    "cancel"      : cancel
   }
 })(window);
